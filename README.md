@@ -4,7 +4,7 @@ App desktop per scaricare i propri libri digitali dai servizi supportati.
 
 ## Installazione su Windows
 
-1. Apri [Releases](../../releases/latest) e scarica il file che termina in `-setup.exe` dalla sezione **Assets**. Non scaricare **Source code**.
+1. Apri [Releases](https://github.com/profpako/book-downloader/releases/latest) e scarica il file che termina in `-setup.exe` dalla sezione **Assets**. Non scaricare **Source code**.
 2. Apri il file scaricato e segui l'installazione. Non servono Python né privilegi di amministratore.
 3. Avvia **Book Downloader** dal menu Start, scegli il servizio e accedi con il tuo account.
 
