@@ -4,11 +4,28 @@ Interfaccia per scaricare i propri libri digitali dai servizi supportati. Al mom
 
 ## Prima di iniziare
 
-1. Installa [Python 3.11](https://www.python.org/downloads/) e [Node.js LTS](https://nodejs.org/en/download). Su Windows, durante l'installazione di Python, abilita il launcher `py` se richiesto.
+1. Servono [Python 3.11](https://www.python.org/downloads/) e [Node.js LTS](https://nodejs.org/en/download). Su Windows puoi installarli con i comandi qui sotto; su Mac usa i link.
 2. In questa pagina GitHub clicca **Code → Download ZIP**, poi estrai lo ZIP. I comandi qui sotto vanno eseguiti nella cartella estratta, quella che contiene `app` e `sidecar`.
 3. Apri due terminali in quella cartella e segui la sezione del tuo sistema operativo. Mantienili aperti mentre usi l'app. Su Windows puoi aprire PowerShell scrivendo `powershell` nella barra degli indirizzi della cartella; su Mac puoi digitare `cd ` nel Terminale, trascinare la cartella nella finestra e premere Invio.
 
 ## Windows (PowerShell)
+
+Se Python e Node.js non sono già installati, apri PowerShell e digita:
+
+```powershell
+winget install --id Python.Python.3.11 --exact --source winget
+winget install --id OpenJS.NodeJS.LTS --exact --source winget
+```
+
+Chiudi e riapri PowerShell, poi controlla che entrambi siano disponibili:
+
+```powershell
+py -3.11 --version
+node --version
+npm --version
+```
+
+Se `winget` non è disponibile, installa Python e Node.js dai link sopra; nell'installer Python abilita il launcher `py` se richiesto. Windows potrebbe chiedere di autorizzare l'installazione.
 
 Nel primo terminale avvia il servizio Python:
 
