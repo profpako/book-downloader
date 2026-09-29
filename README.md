@@ -4,7 +4,7 @@ Interfaccia per scaricare i propri libri digitali dai servizi supportati. Al mom
 
 ## Prima di iniziare
 
-1. Servono [Python 3.11](https://www.python.org/downloads/) e [Node.js](https://nodejs.org/en/download). Puoi installarli con i comandi qui sotto o dai link ufficiali.
+1. Per una nuova installazione usa [Python 3.11](https://www.python.org/downloads/) e [Node.js](https://nodejs.org/en/download). Puoi installarli con i comandi qui sotto o dai link ufficiali.
 2. In questa pagina GitHub clicca **Code → Download ZIP**, poi estrai lo ZIP. I comandi qui sotto vanno eseguiti nella cartella estratta, quella che contiene `app` e `sidecar`.
 3. Apri due terminali in quella cartella e segui la sezione del tuo sistema operativo. Mantienili aperti mentre usi l'app. Su Windows puoi aprire PowerShell scrivendo `powershell` nella barra degli indirizzi della cartella; su Mac puoi digitare `cd ` nel Terminale, trascinare la cartella nella finestra e premere Invio.
 
@@ -29,20 +29,29 @@ winget install --id Python.Python.3.11 --exact --source winget
 winget install --id OpenJS.NodeJS.LTS --exact --source winget
 ```
 
-Chiudi e riapri PowerShell, poi controlla che entrambi siano disponibili:
+Chiudi e riapri PowerShell, poi controlla le versioni installate e il percorso del Python 3.11 che userai:
 
 ```powershell
-py -3.11 --version
+py -0p
+py -3.11 -c "import sys, venv; print(sys.executable); print('venv disponibile')"
 node --version
 npm --version
 ```
 
-Se non puoi installare App Installer, installa Python e Node.js dai link sopra; nell'installer Python abilita il launcher `py` se richiesto. Windows potrebbe chiedere di autorizzare l'installazione.
+`py -0p` elenca le installazioni di Python e i loro percorsi; il comando successivo mostra quella effettivamente scelta e verifica che `venv` sia disponibile. Se `py` o Python 3.11 non vengono trovati, installa Python 3.11 dal link sopra abilitando il launcher `py`, poi riapri PowerShell. Se non puoi installare App Installer, installa Python e Node.js dai link sopra. Windows potrebbe chiedere di autorizzare l'installazione.
 
-Nel primo terminale avvia il servizio Python:
+Nel primo terminale, dalla cartella estratta, crea l'ambiente virtuale e verifica che contenga `pip`:
 
 ```powershell
 py -3.11 -m venv .venv
+.\.venv\Scripts\python.exe -m pip --version
+```
+
+Se `pip` non è disponibile, installalo nell'ambiente virtuale con `.\.venv\Scripts\python.exe -m ensurepip --upgrade`, poi ripeti il controllo. Se il modulo `venv` o `ensurepip` manca, ripara o reinstalla Python 3.11. Non serve attivare l'ambiente: i comandi seguenti usano direttamente il suo Python.
+
+Sempre nel primo terminale, installa le dipendenze e avvia il servizio:
+
+```powershell
 .\.venv\Scripts\python.exe -m pip install -r sidecar\requirements.txt
 .\.venv\Scripts\python.exe -m playwright install chromium
 cd sidecar
@@ -56,7 +65,11 @@ npm ci --prefix app
 npm run dev --prefix app
 ```
 
+Agli avvii successivi non ripetere le installazioni: nel primo terminale esegui `cd sidecar` e `..\.venv\Scripts\python.exe sidecar_api.py`; nel secondo, dalla cartella estratta, esegui `npm run dev --prefix app`.
+
 ## macOS (Terminale)
+
+Se hai già installato le dipendenze, dalla cartella del progetto puoi avviare tutto con `bash start_app.sh`. Lo script usa `.venv/bin/python` se esiste, altrimenti il comando `python` già configurato sul Mac. Apre il browser; per fermare i processi avviati dallo script premi `Ctrl+C`.
 
 Se Python e Node.js non sono già installati, usa [Homebrew](https://brew.sh/) e digita:
 
