@@ -71,6 +71,15 @@ Agli avvii successivi non ripetere le installazioni: nel primo terminale esegui 
 
 Se hai già installato le dipendenze, dalla cartella del progetto puoi avviare tutto con `bash start_app.sh`. Lo script usa `.venv/bin/python` se esiste, altrimenti il comando `python` già configurato sul Mac. Apre il browser; per fermare i processi avviati dallo script premi `Ctrl+C`.
 
+Se usi un ambiente Python esterno al progetto, puoi creare nella cartella del progetto un file `.env.local` con queste impostazioni, sostituendo i percorsi di esempio con quelli del tuo Mac:
+
+```bash
+export BOOK_DOWNLOADER_PYTHON="/percorso/al/tuo/ambiente/bin/python"
+export PLAYWRIGHT_BROWSERS_PATH="/percorso/ai/browser/playwright"
+```
+
+`BOOK_DOWNLOADER_PYTHON` ha precedenza su `.venv` e sul comando `python`; deve indicare un eseguibile con le dipendenze già installate. Imposta `PLAYWRIGHT_BROWSERS_PATH` solo se Chromium è installato in una cartella personalizzata; usa lo stesso valore anche durante l'installazione con `python -m playwright install chromium`. Lo script carica `.env.local` come file Bash: usa solo configurazioni che hai scritto o verificato. Il file è escluso da Git e resta sul tuo computer.
+
 Se Python e Node.js non sono già installati, usa [Homebrew](https://brew.sh/) e digita:
 
 ```bash

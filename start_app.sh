@@ -3,15 +3,21 @@ set -euo pipefail
 
 root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$root_dir"
+if [[ -f "$root_dir/.env.local" ]]; then
+  source "$root_dir/.env.local"
+fi
 
 api_pid=""
 trap '[[ -z "$api_pid" ]] || kill "$api_pid" 2>/dev/null || true' EXIT
 
 if ! curl -fsS --max-time 1 http://127.0.0.1:8923/health >/dev/null 2>&1; then
-  python_bin="$root_dir/.venv/bin/python"
-  [[ -x "$python_bin" ]] || python_bin="$(command -v python || true)"
-  if [[ -z "$python_bin" ]]; then
-    echo "Python non trovato. Segui la sezione macOS del README." >&2
+  python_bin="${BOOK_DOWNLOADER_PYTHON:-$root_dir/.venv/bin/python}"
+  if [[ -z "${BOOK_DOWNLOADER_PYTHON:-}" && ! -x "$python_bin" ]]; then
+    python_bin="$(command -v python || true)"
+  fi
+  export PYTHONDONTWRITEBYTECODE=1
+  if [[ ! -x "$python_bin" ]]; then
+    echo "Python non trovato: $python_bin. Segui la sezione macOS del README." >&2
     exit 1
   fi
 
