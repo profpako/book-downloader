@@ -10,7 +10,13 @@ Interfaccia per scaricare i propri libri digitali dai servizi supportati. Al mom
 
 ## Windows (PowerShell)
 
-Se `winget` non è disponibile, apri la pagina ufficiale di **App Installer** con questo comando, clicca **Installa** e poi riapri PowerShell:
+Per controllare se `winget` è disponibile, apri PowerShell e digita:
+
+```powershell
+winget --version
+```
+
+Se compare un numero di versione, prosegui. Se invece PowerShell dice che `winget` «non è riconosciuto», apri la pagina ufficiale di **App Installer** con questo comando, clicca **Installa**, riapri PowerShell e ripeti `winget --version`:
 
 ```powershell
 Start-Process "https://apps.microsoft.com/detail/9nblggh4nns1"
