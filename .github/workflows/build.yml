@@ -24,6 +24,25 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - run: python -m pip install -r sidecar/requirements.txt pyinstaller
       - run: python sidecar/build_sidecar.py
+      - name: Check packaged backend
+        shell: pwsh
+        run: |
+          $api = Start-Process -FilePath '.\src-tauri\binaries\api-x86_64-pc-windows-msvc.exe' -ArgumentList '--port', '48923' -PassThru
+          try {
+            $ready = $false
+            for ($i = 0; $i -lt 60; $i++) {
+              if ($api.HasExited) { throw 'Backend exited before becoming ready' }
+              try {
+                $data = Invoke-RestMethod 'http://127.0.0.1:48923/services' -TimeoutSec 2
+                if ($data.services.Count -gt 0) { $ready = $true; break }
+              } catch {}
+              Start-Sleep -Seconds 1
+            }
+            if (-not $ready) { throw 'Packaged backend did not start' }
+            Invoke-RestMethod 'http://127.0.0.1:48923/shutdown' -Method Post -TimeoutSec 2 | Out-Null
+          } finally {
+            Stop-Process -Id $api.Id -Force -ErrorAction SilentlyContinue
+          }
       - run: npm ci --prefix app
       - run: .\app\node_modules\.bin\tauri.cmd build --bundles nsis
       - uses: actions/upload-artifact@v4
