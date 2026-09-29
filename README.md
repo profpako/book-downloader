@@ -4,11 +4,17 @@ Interfaccia per scaricare i propri libri digitali dai servizi supportati. Al mom
 
 ## Prima di iniziare
 
-1. Servono [Python 3.11](https://www.python.org/downloads/) e [Node.js LTS](https://nodejs.org/en/download). Su Windows puoi installarli con i comandi qui sotto; su Mac usa i link.
+1. Servono [Python 3.11](https://www.python.org/downloads/) e [Node.js](https://nodejs.org/en/download). Puoi installarli con i comandi qui sotto o dai link ufficiali.
 2. In questa pagina GitHub clicca **Code → Download ZIP**, poi estrai lo ZIP. I comandi qui sotto vanno eseguiti nella cartella estratta, quella che contiene `app` e `sidecar`.
 3. Apri due terminali in quella cartella e segui la sezione del tuo sistema operativo. Mantienili aperti mentre usi l'app. Su Windows puoi aprire PowerShell scrivendo `powershell` nella barra degli indirizzi della cartella; su Mac puoi digitare `cd ` nel Terminale, trascinare la cartella nella finestra e premere Invio.
 
 ## Windows (PowerShell)
+
+Se `winget` non è disponibile, apri la pagina ufficiale di **App Installer** con questo comando, clicca **Installa** e poi riapri PowerShell:
+
+```powershell
+Start-Process "https://apps.microsoft.com/detail/9nblggh4nns1"
+```
 
 Se Python e Node.js non sono già installati, apri PowerShell e digita:
 
@@ -25,7 +31,7 @@ node --version
 npm --version
 ```
 
-Se `winget` non è disponibile, installa Python e Node.js dai link sopra; nell'installer Python abilita il launcher `py` se richiesto. Windows potrebbe chiedere di autorizzare l'installazione.
+Se non puoi installare App Installer, installa Python e Node.js dai link sopra; nell'installer Python abilita il launcher `py` se richiesto. Windows potrebbe chiedere di autorizzare l'installazione.
 
 Nel primo terminale avvia il servizio Python:
 
@@ -45,6 +51,17 @@ npm run dev --prefix app
 ```
 
 ## macOS (Terminale)
+
+Se Python e Node.js non sono già installati, usa [Homebrew](https://brew.sh/) e digita:
+
+```bash
+brew install python@3.11 node
+python3.11 --version
+node --version
+npm --version
+```
+
+Se non usi Homebrew, installa Python e Node.js dai link sopra. Dopo l'installazione chiudi e riapri Terminale.
 
 Nel primo terminale avvia il servizio Python:
 
