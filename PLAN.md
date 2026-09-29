@@ -1,5 +1,7 @@
 # PLAN.md — App Download Libri Digitali
 
+**Distribuzione attuale:** solo avvio dal codice sorgente; le sezioni sugli installer qui sotto descrivono un piano precedente. Per gli utenti, vedi [README.md](README.md).
+
 **Versione**: 0.1.0
 **Stato**: In Corso (scaffold MVP 0.1.0 pronto)
 **Data Inizio**: [DATA]

@@ -5,9 +5,8 @@
 - Da implementare: Pearson eText, Pearson Reader+, Oxford, Laterza diBook e Raffaello Player.
 - Rimossi: Scuolabook (piattaforma chiusa). Mondadori non è separato: i titoli Mondadori Education sono su HUB Scuola.
 
-## Perché Windows/Mac mostra un avviso
-- Windows SmartScreen: installer non firmato (budget €0). "Ulteriori informazioni" → "Esegui comunque".
-- macOS Gatekeeper: ad-hoc signing. Clic destro → Apri → Apri (una volta).
+## Come si avvia l'app su Windows o macOS?
+Si scarica il codice e si seguono le istruzioni nel [README](../README.md). Al momento non è pubblicato un installer.
 
 ## Note legali
 Uso personale dei libri acquistati. Rispetta i termini di servizio di ciascun editore.
