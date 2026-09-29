@@ -2,10 +2,10 @@
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Book Downloader",
   "version": "0.1.0",
-  "identifier": "it.bookdownloader.app",
+  "identifier": "it.bookdownloader.desktop",
   "build": {
-    "beforeDevCommand": "npm run dev --prefix app",
-    "beforeBuildCommand": "npm run build --prefix app",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
     "devUrl": "http://localhost:1420",
     "frontendDist": "../app/dist"
   },
