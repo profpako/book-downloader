@@ -1,0 +1,14 @@
+.DS_Store
+.env*
+__pycache__/
+.pytest_cache/
+*.py[cod]
+*.log
+app/node_modules/
+app/dist/
+sidecar/build/
+sidecar/dist/
+sidecar/*.spec
+src-tauri/target/
+src-tauri/binaries/*
+!src-tauri/binaries/.gitkeep

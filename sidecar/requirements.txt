@@ -1,0 +1,10 @@
+fastapi>=0.110
+uvicorn>=0.29
+requests
+beautifulsoup4
+keyring
+playwright
+pypdf
+pycryptodome
+msgpack
+PyMuPDF
