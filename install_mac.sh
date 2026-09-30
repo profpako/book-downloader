@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+trap '[[ $? -eq 0 ]] || echo "Installazione interrotta." >&2' EXIT
 
 root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$root_dir"
@@ -7,6 +8,10 @@ cd "$root_dir"
 if [[ "$(uname -s)" != "Darwin" ]]; then
   echo "Questo installer funziona solo su macOS." >&2
   exit 1
+fi
+
+if [[ -f "$root_dir/.env.local" ]]; then
+  source "$root_dir/.env.local"
 fi
 
 python_ok() {
@@ -54,7 +59,7 @@ brew_install() {
   fi
 }
 
-python_bin="$(find_python || true)"
+python_bin="${BOOK_DOWNLOADER_PYTHON:-$(find_python || true)}"
 brew_bin=""
 if [[ -z "$python_bin" ]]; then
   echo "Python compatibile non trovato: installazione di Python 3.14..."
@@ -64,7 +69,7 @@ if [[ -z "$python_bin" ]]; then
 fi
 
 if ! python_ok "$python_bin"; then
-  echo "Impossibile installare una versione compatibile di Python (3.10-3.14)." >&2
+  echo "Python non trovato o non compatibile (3.10-3.14): $python_bin" >&2
   exit 1
 fi
 
@@ -85,13 +90,17 @@ fi
 
 echo "Uso $("$python_bin" --version 2>&1) e Node $($node_bin --version)."
 
-if [[ ! -x "$root_dir/.venv/bin/python" ]] || ! python_ok "$root_dir/.venv/bin/python"; then
-  "$python_bin" -m venv --clear "$root_dir/.venv"
+if [[ -z "${BOOK_DOWNLOADER_PYTHON:-}" ]]; then
+  if [[ ! -x "$root_dir/.venv/bin/python" ]] || ! python_ok "$root_dir/.venv/bin/python"; then
+    "$python_bin" -m venv --clear "$root_dir/.venv"
+  fi
+  python_bin="$root_dir/.venv/bin/python"
 fi
 
-"$root_dir/.venv/bin/python" -m pip install -r "$root_dir/sidecar/requirements.txt"
-"$root_dir/.venv/bin/python" -m playwright install chromium
+"$python_bin" -m pip install -r "$root_dir/sidecar/requirements.txt"
+"$python_bin" -m playwright install chromium
 "$npm_bin" ci --prefix "$root_dir/app"
 
 echo "Installazione completata. Avvio Book Downloader..."
-exec /bin/bash "$root_dir/start_app.sh"
+trap 'echo "Server chiuso."' EXIT
+/bin/bash "$root_dir/start_app.sh"

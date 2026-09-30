@@ -7,6 +7,7 @@ import tempfile
 
 
 INSTALLER = Path(__file__).resolve().parents[1] / "install_mac.sh"
+COMMAND = INSTALLER.with_name("INSTALLA_MAC.command")
 
 
 def executable(path, body):
@@ -29,6 +30,7 @@ def fake_python(path, compatible):
       cp "$0" "$target/bin/python"
     else
       echo "$2" >> "$CHECK_ROOT/actions"
+      printf '%s|%s|%s\\n' "$0" "$2" "${{PLAYWRIGHT_BROWSERS_PATH:-}}" >> "$CHECK_ROOT/runtime-actions"
     fi
     ;;
 esac
@@ -48,20 +50,30 @@ fi
     )
 
 
-def check(old_python=False, old_node=False):
+def check(old_python=False, old_node=False, custom=False, missing=False, server_status=0, server_signal=None):
     with tempfile.TemporaryDirectory() as directory:
         root = Path(directory)
         shutil.copyfile(INSTALLER, root / "install_mac.sh")
+        shutil.copyfile(COMMAND, root / "INSTALLA_MAC.command")
         (root / "sidecar").mkdir()
         (root / "sidecar/requirements.txt").write_text("fastapi\n")
         (root / "app").mkdir()
         (root / "app/package-lock.json").write_text("{}\n")
-        executable(root / "start_app.sh", 'echo start >> "$CHECK_ROOT/actions"\n')
+        stop = f'kill -{server_signal} "$$"' if server_signal else f'exit {server_status}'
+        executable(root / "start_app.sh", f'echo start >> "$CHECK_ROOT/actions"\n{stop}\n')
 
         bin_dir = root / "bin"
         for name in ("python3.14", "python3.13", "python3.12", "python3.11", "python3.10", "python3", "python"):
             fake_python(bin_dir / name, not old_python)
         fake_python(root / "new-python", True)
+        custom_python = root / "custom environment/bin/python"
+        if custom or missing:
+            if not missing:
+                fake_python(custom_python, True)
+            (root / ".env.local").write_text(
+                f'export BOOK_DOWNLOADER_PYTHON="{custom_python}"\n'
+                f'export PLAYWRIGHT_BROWSERS_PATH="{root}/custom browsers"\n'
+            )
         executable(bin_dir / "uname", "echo Darwin\n")
         fake_node(bin_dir / "node", not old_node)
         fake_node(bin_dir / "node-new", True)
@@ -85,23 +97,49 @@ esac
         )
 
         env = os.environ.copy()
+        for key in ("BOOK_DOWNLOADER_PYTHON", "PLAYWRIGHT_BROWSERS_PATH"):
+            env.pop(key, None)
         env.update(PATH=f"{bin_dir}:/usr/bin:/bin", CHECK_ROOT=str(root))
         result = subprocess.run(
-            ["/bin/bash", str(root / "install_mac.sh")],
+            ["/bin/bash", str(root / "INSTALLA_MAC.command")],
             env=env,
+            input="\n",
             capture_output=True,
             text=True,
             timeout=10,
         )
-        assert result.returncode == 0, result.stderr
+        if missing:
+            assert result.returncode == 1, result
+            assert "Python non trovato o non compatibile" in result.stderr
+            assert "Installazione interrotta." in result.stderr
+            assert "Server chiuso." not in result.stdout
+            assert not (root / "actions").exists()
+            assert not (root / ".venv").exists()
+            return
+        assert result.returncode == server_status, result.stderr
+        assert "Server chiuso." in result.stdout
+        assert "Installazione interrotta" not in result.stdout + result.stderr
         actions = (root / "actions").read_text().splitlines()
         assert actions[-4:] == ["pip", "playwright", "npm", "start"]
-        assert ("brew-python@3.14" in actions) == old_python
+        assert ("brew-python@3.14" in actions) == (old_python and not custom)
         assert ("brew-node@24" in actions) == old_node
+        selected = custom_python if custom else root / ".venv/bin/python"
+        browsers = str(root / "custom browsers") if custom else ""
+        assert (root / "runtime-actions").read_text().splitlines() == [
+            f"{selected}|{module}|{browsers}" for module in ("pip", "playwright")
+        ]
+        assert (root / ".venv").exists() != custom
 
 
 if __name__ == "__main__":
     check()
     check(old_python=True)
     check(old_node=True)
-    print("macOS installer checks passed (existing, outdated Python, outdated Node).")
+    check(old_python=True, custom=True)
+    check(custom=True, old_node=True)
+    check(missing=True)
+    for status in (1, 130, 143):
+        check(server_status=status)
+    check(server_status=130, server_signal="INT")
+    check(server_status=143, server_signal="TERM")
+    print("macOS installer checks passed (existing, outdated Python/Node, custom, missing, shutdown).")

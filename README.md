@@ -67,6 +67,8 @@ Puoi aprire di nuovo lo stesso file usato per l'installazione:
 
 Lo script ricontrolla l'ambiente e riusa tutto ciò che è già installato. Per fermare l'app premi `Ctrl+C` nella finestra che è rimasta aperta. La finestra deve restare aperta mentre usi Book Downloader.
 
+Su macOS, alla chiusura del server compare `Server chiuso.`. Il messaggio `Installazione interrotta.` compare solo se la preparazione dell'ambiente non è stata completata.
+
 ## Uso
 
 Quando si apre **http://localhost:1420**:
@@ -125,4 +127,4 @@ export BOOK_DOWNLOADER_PYTHON="/percorso/ambiente/bin/python"
 export PLAYWRIGHT_BROWSERS_PATH="/percorso/browser/playwright"
 ```
 
-Questa configurazione avanzata viene letta da `start_app.sh`, non è necessaria per l'installazione normale.
+Questa configurazione avanzata viene letta da `install_mac.sh` e `start_app.sh`: installazione e avvio usano lo stesso ambiente Python e la stessa cartella dei browser. Non è necessaria per l'installazione normale.
