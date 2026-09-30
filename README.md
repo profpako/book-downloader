@@ -1,113 +1,128 @@
 # Book Downloader
 
-Interfaccia per scaricare i propri libri digitali dai servizi supportati. Al momento si avvia dal codice sorgente nel browser: non c'è un installer Windows o macOS da scaricare.
+Interfaccia per scaricare i propri libri digitali dai servizi supportati. L'app funziona nel browser, ma tutti i dati e i processi restano sul computer dell'utente.
 
-## Prima di iniziare
+## Installazione rapida
 
-1. Per una nuova installazione usa [Python 3.11](https://www.python.org/downloads/) e [Node.js](https://nodejs.org/en/download). Puoi installarli con i comandi qui sotto o dai link ufficiali.
-2. In questa pagina GitHub clicca **Code → Download ZIP**, poi estrai lo ZIP. I comandi qui sotto vanno eseguiti nella cartella estratta, quella che contiene `app` e `sidecar`.
-3. Apri due terminali in quella cartella e segui la sezione del tuo sistema operativo. Mantienili aperti mentre usi l'app. Su Windows puoi aprire PowerShell scrivendo `powershell` nella barra degli indirizzi della cartella; su Mac puoi digitare `cd ` nel Terminale, trascinare la cartella nella finestra e premere Invio.
+Serve una connessione Internet durante la prima installazione. Non occorre installare manualmente Python, Node.js o Chromium: gli script controllano il computer e preparano ciò che manca.
 
-## Windows (PowerShell)
+| Sistema | File da aprire |
+|---|---|
+| macOS | `INSTALLA_MAC.command` |
+| Windows 10/11 | `INSTALLA_WINDOWS.bat` |
 
-Per controllare se `winget` è disponibile, apri PowerShell e digita:
+### 1. Scarica ed estrai il progetto
 
-```powershell
-winget --version
-```
+1. In questa pagina GitHub premi **Code**, poi **Download ZIP**.
+2. Apri il file ZIP scaricato e attendi che venga estratto completamente.
+3. Apri la cartella estratta, quella che contiene `INSTALLA_MAC.command` e `INSTALLA_WINDOWS.bat`.
 
-Se compare un numero di versione, prosegui. Se invece PowerShell dice che `winget` «non è riconosciuto», apri la pagina ufficiale di **App Installer** con questo comando, clicca **Installa**, riapri PowerShell e ripeti `winget --version`:
+Non avviare i file direttamente dall'anteprima del ZIP: devono trovarsi in una normale cartella del computer.
 
-```powershell
-Start-Process "https://apps.microsoft.com/detail/9nblggh4nns1"
-```
+### 2A. Installa su macOS
 
-Se Python e Node.js non sono già installati, apri PowerShell e digita:
+1. Fai doppio clic su **INSTALLA_MAC.command**.
+2. Se macOS chiede conferma, scegli **Apri**. Se il doppio clic viene bloccato, fai clic destro sul file, scegli **Apri** e conferma di nuovo.
+3. Lascia aperta la finestra del Terminale. Se viene richiesta la password del Mac, digitala e premi Invio: mentre scrivi la password non compaiono caratteri, ed è normale.
+4. Attendi il messaggio `Installazione completata`. Il browser si aprirà automaticamente su **http://localhost:1420**.
 
-```powershell
-winget install --id Python.Python.3.11 --exact --source winget
-winget install --id OpenJS.NodeJS.LTS --exact --source winget
-```
-
-Chiudi e riapri PowerShell, poi controlla le versioni installate e il percorso del Python 3.11 che userai:
-
-```powershell
-py -0p
-py -3.11 -c "import sys, venv; print(sys.executable); print('venv disponibile')"
-node --version
-npm --version
-```
-
-`py -0p` elenca le installazioni di Python e i loro percorsi; il comando successivo mostra quella effettivamente scelta e verifica che `venv` sia disponibile. Se `py` o Python 3.11 non vengono trovati, installa Python 3.11 dal link sopra abilitando il launcher `py`, poi riapri PowerShell. Se non puoi installare App Installer, installa Python e Node.js dai link sopra. Windows potrebbe chiedere di autorizzare l'installazione.
-
-Nel primo terminale, dalla cartella estratta, crea l'ambiente virtuale e verifica che contenga `pip`:
-
-```powershell
-py -3.11 -m venv .venv
-.\.venv\Scripts\python.exe -m pip --version
-```
-
-Se `pip` non è disponibile, installalo nell'ambiente virtuale con `.\.venv\Scripts\python.exe -m ensurepip --upgrade`, poi ripeti il controllo. Se il modulo `venv` o `ensurepip` manca, ripara o reinstalla Python 3.11. Non serve attivare l'ambiente: i comandi seguenti usano direttamente il suo Python.
-
-Sempre nel primo terminale, installa le dipendenze e avvia il servizio:
-
-```powershell
-.\.venv\Scripts\python.exe -m pip install -r sidecar\requirements.txt
-.\.venv\Scripts\python.exe -m playwright install chromium
-cd sidecar
-..\.venv\Scripts\python.exe sidecar_api.py
-```
-
-Nel secondo terminale, dalla cartella estratta:
-
-```powershell
-npm ci --prefix app
-npm run dev --prefix app
-```
-
-Agli avvii successivi non ripetere le installazioni: nel primo terminale esegui `cd sidecar` e `..\.venv\Scripts\python.exe sidecar_api.py`; nel secondo, dalla cartella estratta, esegui `npm run dev --prefix app`.
-
-## macOS (Terminale)
-
-Se hai già installato le dipendenze, dalla cartella del progetto puoi avviare tutto con `bash start_app.sh`. Lo script usa `.venv/bin/python` se esiste, altrimenti il comando `python` già configurato sul Mac. Apre il browser; per fermare i processi avviati dallo script premi `Ctrl+C`.
-
-Se usi un ambiente Python esterno al progetto, puoi creare nella cartella del progetto un file `.env.local` con queste impostazioni, sostituendo i percorsi di esempio con quelli del tuo Mac:
+Se il file non parte con il doppio clic, apri Terminale, scrivi `cd ` con uno spazio finale, trascina la cartella del progetto dentro la finestra, premi Invio e poi esegui:
 
 ```bash
-export BOOK_DOWNLOADER_PYTHON="/percorso/al/tuo/ambiente/bin/python"
-export PLAYWRIGHT_BROWSERS_PATH="/percorso/ai/browser/playwright"
+bash install_mac.sh
 ```
 
-`BOOK_DOWNLOADER_PYTHON` ha precedenza su `.venv` e sul comando `python`; deve indicare un eseguibile con le dipendenze già installate. Imposta `PLAYWRIGHT_BROWSERS_PATH` solo se Chromium è installato in una cartella personalizzata; usa lo stesso valore anche durante l'installazione con `python -m playwright install chromium`. Lo script carica `.env.local` come file Bash: usa solo configurazioni che hai scritto o verificato. Il file è escluso da Git e resta sul tuo computer.
+### 2B. Installa su Windows
 
-Se Python e Node.js non sono già installati, usa [Homebrew](https://brew.sh/) e digita:
+1. Fai doppio clic su **INSTALLA_WINDOWS.bat**.
+2. Se Windows chiede di consentire l'installazione di un componente ufficiale, conferma.
+3. Lascia aperta la finestra. Lo script può installare il gestore Python ufficiale per il solo utente corrente; non occorre configurare variabili d'ambiente.
+4. Attendi il messaggio `Installazione completata`. Il browser si aprirà automaticamente su **http://localhost:1420**.
+
+Se il doppio clic non funziona, apri la cartella, fai clic nella barra dell'indirizzo, scrivi `powershell` e premi Invio. Poi esegui:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install_windows.ps1
+```
+
+## Cosa fa l'installer
+
+L'installer:
+
+1. riutilizza un Python compatibile già presente (da 3.10 a 3.14);
+2. se Python manca o è incompatibile, installa Python 3.14, la release stabile corrente supportata dal progetto;
+3. riutilizza una versione supportata di Node.js oppure installa Node.js 24 LTS su macOS e l'ultima LTS ufficiale disponibile su Windows;
+4. crea l'ambiente isolato `.venv` senza modificare i pacchetti Python dell'utente;
+5. installa le dipendenze Python, Chromium per Playwright e i pacchetti dell'interfaccia;
+6. avvia il servizio locale e apre il browser.
+
+Su macOS le dipendenze mancanti vengono installate tramite [Homebrew](https://brew.sh/); se Homebrew non esiste, viene installato dal suo script ufficiale. Su Windows Python viene ottenuto tramite il [Python Install Manager ufficiale](https://docs.python.org/3/using/windows.html) e Node.js dagli archivi ufficiali, verificandone il checksum SHA-256.
+
+## Avvii successivi
+
+Puoi aprire di nuovo lo stesso file usato per l'installazione:
+
+- macOS: **INSTALLA_MAC.command**;
+- Windows: **INSTALLA_WINDOWS.bat**.
+
+Lo script ricontrolla l'ambiente e riusa tutto ciò che è già installato. Per fermare l'app premi `Ctrl+C` nella finestra che è rimasta aperta. La finestra deve restare aperta mentre usi Book Downloader.
+
+## Uso
+
+Quando si apre **http://localhost:1420**:
+
+1. scegli il servizio;
+2. inserisci le credenziali del tuo account;
+3. aggiorna la libreria;
+4. seleziona e scarica i libri.
+
+Le credenziali vengono salvate nel portachiavi sicuro del sistema operativo. Per la cartella dei PDF e le altre funzioni consulta la [guida utente](docs/GUIDA-UTENTE.md) e le [domande frequenti](docs/FAQ.md).
+
+## Problemi comuni
+
+### Il browser non si apre
+
+Apri manualmente **http://localhost:1420**. Se la pagina non risponde, controlla che la finestra dell'installer sia ancora aperta e non mostri un errore.
+
+### La porta 1420 o 8923 è già occupata
+
+Chiudi le altre finestre di Book Downloader e rilancia lo script. Se il problema continua, riavvia il computer e riprova.
+
+### Il download di una dipendenza fallisce
+
+Controlla la connessione Internet, disattiva temporaneamente eventuali VPN o proxy aziendali e rilancia lo stesso file. Le installazioni già completate verranno riutilizzate.
+
+### macOS blocca il file
+
+Usa **clic destro → Apri**. Se continua a non partire, usa il comando `bash install_mac.sh` mostrato sopra. Homebrew supporta soltanto versioni di macOS ancora mantenute; su un Mac molto vecchio potrebbe essere necessario aggiornare macOS.
+
+### Windows non trova App Installer
+
+Lo script prova anche il metodo ufficiale alternativo di python.org. Se Windows blocca entrambi i metodi, installa o aggiorna **App Installer** dal Microsoft Store, riavvia il computer e rilancia `INSTALLA_WINDOWS.bat`. WinGet è supportato da Windows 10 versione 1809 o successiva e Windows 11.
+
+### L'installazione si interrompe ancora
+
+Non chiudere subito la finestra: l'ultima riga indica il componente che ha fallito. Conserva il testo completo dell'errore insieme al nome e alla versione del sistema operativo; sono le informazioni necessarie per ricevere assistenza.
+
+## Avvio manuale per sviluppatori
+
+Dopo che l'installer ha completato almeno una volta, su macOS puoi usare:
 
 ```bash
-brew install python@3.11 node
-python3.11 --version
-node --version
-npm --version
+bash start_app.sh
 ```
 
-Se non usi Homebrew, installa Python e Node.js dai link sopra. Dopo l'installazione chiudi e riapri Terminale.
-
-Nel primo terminale avvia il servizio Python:
+Su Windows è sufficiente rilanciare `INSTALLA_WINDOWS.bat`. Il frontend può essere verificato separatamente con:
 
 ```bash
-python3.11 -m venv .venv
-.venv/bin/python -m pip install -r sidecar/requirements.txt
-.venv/bin/python -m playwright install chromium
-cd sidecar
-../.venv/bin/python sidecar_api.py
+npm run build --prefix app
 ```
 
-Nel secondo terminale, dalla cartella estratta:
+Chi usa un ambiente Python macOS esterno può creare `.env.local` nella cartella del progetto:
 
 ```bash
-npm ci --prefix app
-npm run dev --prefix app
+export BOOK_DOWNLOADER_PYTHON="/percorso/ambiente/bin/python"
+export PLAYWRIGHT_BROWSERS_PATH="/percorso/browser/playwright"
 ```
 
-Nel primo terminale deve apparire `READY port=8923`. Poi apri **http://localhost:1420** nel browser. Scegli il servizio, accedi e scarica i libri. Per fermare l'app premi `Ctrl+C` in entrambi i terminali. Se una porta è occupata, chiudi eventuali istanze già aperte e riprova. Il primo avvio richiede Internet per installare le dipendenze e Chromium; i download dei libri richiedono la connessione ai servizi.
-
-Questo avvia l'interfaccia nel browser, senza installare un'app nel menu Start o nella cartella Applicazioni. Per la cartella dei PDF e altre indicazioni consulta la [guida utente](docs/GUIDA-UTENTE.md).
+Questa configurazione avanzata viene letta da `start_app.sh`, non è necessaria per l'installazione normale.

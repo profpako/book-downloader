@@ -1,6 +1,6 @@
 # Guida rapida
 
-Per scaricare il codice e avviare l'app su Windows o macOS, segui il [README](../README.md). Non c'è un installer pubblicato.
+Per scaricare il codice e preparare automaticamente l'app su Windows o macOS, segui l'[installazione rapida nel README](../README.md).
 
 ## Uso
 Apri http://localhost:1420 nel browser → scegli il servizio → accedi → seleziona i libri → Scarica.
