@@ -59,7 +59,8 @@ def check(old_python=False, old_node=False):
         executable(root / "start_app.sh", 'echo start >> "$CHECK_ROOT/actions"\n')
 
         bin_dir = root / "bin"
-        fake_python(bin_dir / "python3", not old_python)
+        for name in ("python3.14", "python3.13", "python3.12", "python3.11", "python3.10", "python3"):
+            fake_python(bin_dir / name, not old_python)
         fake_python(root / "new-python", True)
         executable(bin_dir / "uname", "echo Darwin\n")
         fake_node(bin_dir / "node", not old_node)
