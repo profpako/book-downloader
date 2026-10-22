@@ -99,7 +99,7 @@ def test_registry_tutti():
     from services.registry import all_services
     services = all_services()
     ids = {s.id for s in services}
-    assert {"zanichelli-booktab", "hubscuola", "bsmart"} <= ids
+    assert {"zanichelli-booktab", "hubscuola", "bsmart", "sanoma"} <= ids
     assert {"scuolabook", "mondadori", "zanichelli-kitaboo"}.isdisjoint(ids)
     assert {s.id for s in services if not s.implemented} == {
         "pearson-etext", "pearson-reader", "oxford", "laterza", "raffaello"

@@ -5,6 +5,7 @@ from .base import BaseService
 from .booktab import BooktabService
 from .bsmart import BsmartService
 from .kitaboo import PearsonReaderService
+from .sanoma import SanomaService
 from .others import GenericService, HubscuolaService, PearsonEtextService
 
 
@@ -13,6 +14,7 @@ def all_services() -> list[BaseService]:
         BooktabService(),
         HubscuolaService(),
         BsmartService(),
+        SanomaService(),
         PearsonEtextService(),
         PearsonReaderService(),
         GenericService("oxford", "Oxford", "Oxford Learner's Bookshelf / Oxford English Hub."),

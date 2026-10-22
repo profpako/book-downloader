@@ -11,6 +11,7 @@ class ServiceId(str, Enum):
     BOOKTAB = "zanichelli-booktab"
     HUBSCUOLA = "hubscuola"
     BSMART = "bsmart"
+    SANOMA = "sanoma"
     PEARSON_ETEXT = "pearson-etext"
     PEARSON_READER = "pearson-reader"
     OXFORD = "oxford"

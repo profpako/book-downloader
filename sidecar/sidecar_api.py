@@ -48,7 +48,8 @@ def _book_dict(book: Book) -> dict:
 
 def _file_identity(path: Path) -> tuple[str, str, str]:
     prefixes = {"zanichelli-": ServiceId.BOOKTAB.value,
-                "hubscuola-": ServiceId.HUBSCUOLA.value, "bsmart-": ServiceId.BSMART.value}
+                "hubscuola-": ServiceId.HUBSCUOLA.value, "bsmart-": ServiceId.BSMART.value,
+                "sanoma-": ServiceId.SANOMA.value}
     for prefix, service in prefixes.items():
         if path.stem.startswith(prefix):
             book_id, _, title = path.stem[len(prefix):].partition("-")

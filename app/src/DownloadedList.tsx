@@ -6,7 +6,7 @@ type DownloadedBook = {
 };
 
 const serviceNames: Record<string, string> = {
-  'zanichelli-booktab': 'Zanichelli', hubscuola: 'HUB Scuola', bsmart: 'bSmart',
+  'zanichelli-booktab': 'Zanichelli', hubscuola: 'HUB Scuola', bsmart: 'bSmart', sanoma: 'Sanoma',
 };
 
 function sizeLabel(bytes = 0) {
