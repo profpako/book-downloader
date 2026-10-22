@@ -151,6 +151,8 @@ class HubscuolaService(BaseService):
                     (f"meyoung/publication/{book_id}",)).fetchone()
                 db.close()
             chapters = _json.loads(row[0])["indexContents"]["chapters"]
+            # L'indice include anche riferimenti numerici senza archivio capitolo.
+            chapters = [ch for ch in chapters if isinstance(ch, dict)]
         except Exception:
             raise ServiceAuthError("Libro non leggibile (formato inatteso).")
         if not chapters:
